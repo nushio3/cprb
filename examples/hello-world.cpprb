@@ -1,9 +1,6 @@
-/*
- puts "*/
 #include <iostream>
 using namespace std;
 
 int main () {
   cout << "Hello World, I was born at #{Time.now} !" << endl;
 }
-/*" */
