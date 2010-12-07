@@ -54,3 +54,15 @@ Then download and compile Cprb by
     $ git clone https://github.com/nushio3/cprb.git
     $ cd cprb
     $ make
+
+
+
+#### usage:
+
+Usage: cprb [OPTION...] files...
+           --keep              keep intermediate files that are generated during
+                               internal preprocessing steps.
+  -o file  --output-file=file  specify name and location of the output file.
+                               Default output filename is input filename with
+                               'rb' removed from the extension;for example,
+                               'cprb foo.cpprb' generates 'foo.cpp'
