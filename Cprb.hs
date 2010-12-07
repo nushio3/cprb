@@ -87,8 +87,10 @@ generate filename naws cprbSrc = do
         makeHereDocument s = do
           (naw:xs) <- readIORef naws
           writeIORef naws xs
-          return $ "<<" ++ naw ++ "\n" ++ s ++ "\n" ++ naw ++ "\n"
+          return $ "<<" ++ naw ++ "\n" ++ escape s ++ "\n" ++ naw ++ "\n"
         
+        escape = concat . map (\c -> if c == '\\' then "\\\\" else [c])
+
         (fnBody, fnExt) = splitExtension filename
         (fnExt1, fnExt2) = splitAt (length fnExt - 2) fnExt
 

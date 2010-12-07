@@ -41,6 +41,7 @@ const int N2 = 50;
 /*"
   a = "*/
 int main () {
+  cout << "You can safely output\nNewlines and\ttabs." << endl;
   return 0;
   
 
