@@ -4,16 +4,12 @@ using namespace std;
 const int N = 10; // the size of mesh
 
 /*"
-  def xyz()
-  ['X', 'Y', 'Z'].each{|dir| yield(dir)}
-  end
-
   def xyzi()
   ctr = 0
   ['X', 'Y', 'Z'].each{|dir| yield(dir,ctr); ctr+=1}
   end  
 
-  xyz{|dir| puts "*/ 
+  xyzi{|dir,| puts "*/ 
 struct #{dir}{}; 
 /*" }
 
