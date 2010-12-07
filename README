@@ -27,7 +27,7 @@ from a Ruby region, and switches into C region by quoting comments.
 rules apply between "*/ and /*" :
 
 - (n) repeated occurence of \ is mapped to (2n) repeat
-- if some letters are before /*" or after "*/, newline is inserted.
+- if some letters are after "*/ or before /*", newline is inserted.
 - if only spaces are before /*", they get truncated.
 
 Commented and uncommented letters in C region get quoted. Commented letters in
