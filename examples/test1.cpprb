@@ -1,50 +1,36 @@
 /*
+  def xyz()
+  ['X', 'Y', 'Z'].each{|dir| yield(dir)}
+  end
+
+  def xyzi()
+  ctr = 0
+  ['X', 'Y', 'Z'].each{|dir| yield(dir,ctr); ctr+=1}
+  end  
 
   puts "*/
 
 #include <iostream>
 using namespace std;
 
-const int N = 100; // the size of mesh
-
-
+const int N = 10; // the size of mesh
 /*"                                             
-  def xyz()
-  ['X', 'Y', 'Z'].each{|dir| yield(dir)}
-  end  
 
-*/
-These contents get simply discarded;
-/*
-  
-  "*/ 
-These contents receive here-document id;
-But never get used;
-/*"
-  xyz{|d| puts "*/
-struct #{d}{};
-/*"
-  }
-  puts "*/
+  xyz{|dir| puts "*/ struct #{dir}{}; /*" }
 
+xyzi{|dir,i| puts "*/
+int operator+(int x, #{dir} d) {
+  return x + 1#{ ' *N'*i };
+}
+/*" }
 
-/**/
-
-/*  // *//*  // *//*  // */
-
-const int N2 = 50;
-
-/* /* */
-
-
-
-/*"
   a = "*/
 int main () {
+  cout << 0#{' +Y()'*4}#{' +X()'*2} << endl;
   return 0;
+} /*"
 
 
-/*"
   puts a
 */
 
