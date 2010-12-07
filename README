@@ -1,14 +1,12 @@
 Cprb is a C Preprocessor in Ruby flavor, written in Haskell.
 
 
-
 #### philosophy of Cprb:
 
 1. C preprocessor is poor. This is the origin of suffering.
 2. Then why not use a better language.
 3. minimum implementation cost
 4. use in emacs c++-mode
-
 
 
 #### rules for Cprb:
@@ -35,7 +33,6 @@ Ruby region become part of the ruby program. Uncommented letters in Ruby
 region are ignored.
 
 
-
 #### how to build:
 
 Cprb needs Haskell and Ruby. An easy way to prepare Haskell environment is to
@@ -54,7 +51,6 @@ Then download and compile Cprb by
     $ git clone https://github.com/nushio3/cprb.git
     $ cd cprb
     $ make
-
 
 
 #### usage:

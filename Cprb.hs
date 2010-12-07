@@ -1,6 +1,7 @@
 #!/usr/bin/env runhaskell
 
 import Control.Monad
+import Data.Char
 import Data.IORef
 import Data.List
 import System.Console.GetOpt
@@ -11,6 +12,7 @@ import System.Cmd
 import System.IO
 import System.IO.Unsafe
 
+import Debug
 import Parser
 
 
@@ -52,6 +54,7 @@ main = forM_ argv treat
 treat filename = do
   src <- readFile filename
   naws <- newIORef $ neverAppearingWords src
+
   case parseCprbSrc filename src of
     Right cprbSrc -> generate filename naws cprbSrc 
     Left err -> do
@@ -65,7 +68,6 @@ generate filename naws cprbSrc = do
   let fns = [filename, fnRuby, fnCpp]
   when (nub fns /= fns) $ bailout $ 
     "filename collision :" ++ concat (intersperse ", " fns)
-
   ret <- fmap concat $ mapM toRuby cprbSrc
   writeFile fnRuby ret
   system $ "ruby " ++ fnRuby ++ " > " ++ fnCpp
@@ -84,10 +86,22 @@ generate filename naws cprbSrc = do
         reconstruct (Comment s _ _) = "/*" ++ s ++ "*/"
         reconstruct _ = ""
         
-        makeHereDocument s = do
+        makeHereDocument src = do
           (naw:xs) <- readIORef naws
           writeIORef naws xs
-          return $ "<<" ++ naw ++ "\n" ++ escape s ++ "\n" ++ naw ++ "\n"
+          let srclines = lines src
+          let newLineBE
+                | length srclines == 0 = [True,False]
+                | otherwise = map not [all isSpace (head srclines),
+                                       all isSpace (last srclines)]
+          let [strB, strE] = map (\x->if x then "\n" else "")
+                           newLineBE
+          let newsrc
+                | not $ all isSpace $ last srclines = src
+                | otherwise =  concat.reverse.drop 1.reverse $ srclines
+          return $ "<<" ++ naw ++ strB
+                   ++ escape newsrc
+                   ++ strE ++ naw ++ "\n"
         
         escape = concat . map (\c -> if c == '\\' then "\\\\" else [c])
 
