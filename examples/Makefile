@@ -1,4 +1,4 @@
-all:test-1.out
+all:test-1.out test-2.out
 
 .SUFFIXES: .o .cpp .cpprb
 
@@ -14,6 +14,11 @@ CPRB = ../cprb
 test-1.out:test-1.o
 	$(CXX) -o $@ $^
 
+test-2.out:test-2.o
+	$(CXX) -o $@ $^
+
+
+.PHONY: clean
 clean:
 	rm -f *.cpp *.out *.o *~
 
