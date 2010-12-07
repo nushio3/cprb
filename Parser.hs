@@ -84,9 +84,23 @@ oneLineComment = do
   p2 <- getPosition
   return $ OneLineComment cs p1 p2
 
+quotedString = do
+  p1 <- getPosition
+  try $ char '\"'
+  p2 <- getPosition
+  inside <- fmap concat $ manyTill quoteContent (char '\"')
+  return $ Src (quote inside) p1 p2
+    where
+      quoteContent = escapedChar <|> fmap return (noneOf "\"")
+      escapedChar = do
+                a <- char '\\'
+                b <- anyChar
+                return [a,b]
+      quote str = "\"" ++ str ++ "\"" 
+
 cppSrc::Parser CppSrc
 cppSrc = do
-  cpp <- many (comment <|> oneLineComment <|> cppChar) 
+  cpp <- many (quotedString <|> comment <|>oneLineComment <|> cppChar) 
   return $ detectControl.map reduce.g $ cpp
     where
       reduce::[CppPart] -> CppPart
