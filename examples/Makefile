@@ -1,4 +1,4 @@
-all:test-1.out test-2.out
+all: hello-world.out test-1.out test-2.out
 
 .SUFFIXES: .o .cpp .cpprb
 
@@ -10,6 +10,9 @@ CPRB = ../cprb
 
 .cpp.o:
 	$(CXX) -c $<
+
+hello-world.out:hello-world.o
+	$(CXX) -o $@ $^
 
 test-1.out:test-1.o
 	$(CXX) -o $@ $^
