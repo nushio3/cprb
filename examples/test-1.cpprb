@@ -16,7 +16,9 @@ using namespace std;
 const int N = 10; // the size of mesh
 /*"                                             
 
-  xyz{|dir| puts "*/ struct #{dir}{}; /*" }
+  xyz{|dir| puts "*/ 
+struct #{dir}{}; 
+/*" }
 
 xyzi{|dir,i| puts "*/
 int operator+(int x, #{dir} d) {

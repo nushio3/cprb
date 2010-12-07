@@ -90,20 +90,17 @@ generate filename naws cprbSrc = do
           (naw:xs) <- readIORef naws
           writeIORef naws xs
           let srclines = lines src
-          let newLineBE
-                | length srclines == 0 = [True,False]
-                | otherwise = map not [all isSpace (head srclines),
-                                       all isSpace (last srclines)]
-          let [strB, strE] = map (\x->if x then "\n" else "")
-                           newLineBE
-          let newsrc
-                | not $ all isSpace $ last srclines = src
-                | otherwise =  concat.reverse.drop 1.reverse $ srclines
-          return $ "<<" ++ naw ++ strB
-                   ++ escape newsrc
-                   ++ strE ++ naw ++ "\n"
+          return $ "<<" ++ naw ++ "\n"
+                    ++ (escape . trim) src
+                    ++ "\n" ++ naw ++ "\n"
         
         escape = concat . map (\c -> if c == '\\' then "\\\\" else [c])
+        trim = let 
+          trim1 [] = []
+          trim1 list@(x:xs)
+            | all isSpace x = xs
+            | otherwise = list 
+          in concat.intersperse "\n".trim1.lines
 
         (fnBody, fnExt) = splitExtension filename
         (fnExt1, fnExt2) = splitAt (length fnExt - 2) fnExt
