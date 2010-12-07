@@ -1,10 +1,15 @@
-all: hello-world.out test-1.out test-2.out test-3.out fruits.out
+all: hello-world.out test-1.out test-2.out test-3.out fruits.out collabo.out
 
-.SUFFIXES: .o .cpp .cpprb
+.SUFFIXES: .o .h .c .cpp .hrb .crb .cpprb
 
+CC = gcc
 CXX = g++
 CPRB = ../cprb
 
+.hrb.h:
+	$(CPRB) $<
+.crb.c:
+	$(CPRB) $<
 .cpprb.cpp:
 	$(CPRB) $<
 
@@ -24,7 +29,12 @@ test-3.out:test-3.cpp
 	$(CXX) -o $@ $^
 
 
+collabo.out:collabo.h collabo.c collabo-main.cpp
+	$(CC) collabo.c -c
+	$(CXX) collabo-main.cpp -c
+	$(CXX) collabo.o collabo-main.o -o collabo.out
+
 .PHONY: clean
 clean:
-	rm -f *.cpp *.out *.o *~
+	rm -f *.c *.h *.cpp *.out *.o *~
 

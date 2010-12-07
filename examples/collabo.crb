@@ -1,8 +1,9 @@
 /* puts "*/
+#include <stdio.h>
 #include "collabo.h"
 
-void btoa (char *p) {
-  for(++p; *p; ++p) *p--;
+void decaesar (const char *p) {
+  for(;*p;++p) putchar(*p-1);
 }
 
 /*" */

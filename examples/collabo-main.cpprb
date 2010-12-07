@@ -8,9 +8,9 @@ extern "C" {
 }
 
 int main () {
-  string str = "bbnbnb";
-  btoa(&str[0]);
-  cout << str << endl;
+  string str = "cbobob";
+  decaesar(str.c_str());
+  cout << endl;
 }
 
 /*" */

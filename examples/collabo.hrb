@@ -1,5 +1,5 @@
 /* puts "*/
 
-void btoa (char *p);
+void decaesar (const char *p);
 
 /*" */
