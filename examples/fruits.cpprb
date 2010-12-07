@@ -3,30 +3,49 @@
  ['+','-','*','/'].each{|op| yield(op)}
  end
 
+ puts "*/
 
-  puts"*/
 #include <iostream>
 using namespace std;
 
-class BananaBox {
-  int banana;
+/*"
+  ['apple', 'banana', 'cherry'].each{|fruit|
+  fRuit = fruit.clone
+  fRuit[0]-=32
+  puts "*/ 
+class #{fRuit}Box {
+  int #{fruit};
 public:
-  void print () {
-    cout << banana << " bananas inside box." << endl;
+  #{fRuit}Box (int #{fruit}) : #{fruit}(#{fruit}) {}
+  void print_stock () {
+    cout << "we have " << #{fruit} << " #{fruit}s inside box.\n";
   }/*"
      
      arith{|op| puts "*/
-  BananaBox operator#{op}= (const BananaBox &x) {
-    banana #{op}= x.banana;
+  #{fRuit}Box operator#{op}= (const #{fRuit}Box &x) {
+    #{fruit} #{op}= x.#{fruit};
     return *this;
   }
-  BananaBox operator#{op} (const BananaBox &x) {
-    return BananaBox(banana #{op} x.banana);
+  #{fRuit}Box operator#{op} (const #{fRuit}Box &x) {
+    return #{fRuit}Box(#{fruit} #{op} x.#{fruit});
   }
-  /*" } */
+  /*" }
+
+
+    puts "*/
 };
 
+/*" }
+
+ puts "*/
+
 int main () {
+  BananaBox b(2);
+  b -= 4;
+  b += 6;
+  b *= 8;
+  b += 10;
+  b.print_stock();
   return 0;
 }
 /*" */
