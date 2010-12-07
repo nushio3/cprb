@@ -1,0 +1,51 @@
+/*
+
+  puts "*/
+
+#include <iostream>
+using namespace std;
+
+const int N = 100; // the size of mesh
+
+
+/*"                                             
+  def xyz()
+  ['X', 'Y', 'Z'].each{|dir| yield(dir)}
+  end  
+
+*/
+These contents get simply discarded;
+/*
+  
+  "*/ 
+These contents receive here-document id;
+But never get used;
+/*"
+  xyz{|d| puts "*/
+struct #{d}{};
+/*"
+  }
+  puts "*/
+
+
+/**/
+
+/*  // *//*  // *//*  // */
+
+const int N2 = 50;
+
+/* /* */
+
+
+
+/*"
+  a = "*/
+int main () {
+  return 0;
+
+
+/*"
+  puts a
+*/
+
+

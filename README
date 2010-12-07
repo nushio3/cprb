@@ -1,0 +1,37 @@
+Cprb is a C Preprocessor in Ruby flavor, written in Haskell.
+
+
+philosophy of Cprb:
+
+1. C preprocessor is poor. This is the origin of suffering.
+2. Then why not use a better language.
+3. minimum implementation cost
+4. use in emacs c++-mode
+
+Bad news for those who loves Haskell: auto-indent ruins the indent within
+comment, so I couldn't use the indent-dependent language. Not to mention
+P*****.
+
+
+rules for Cprb:
+
+Program of Cprb looks like a legal C program. But after some minor editing, it
+is first interpreted and run as a Ruby program. The standard output of the run
+becomes a C program. A Cprb program has Ruby region and C region. It starts
+from a Ruby region, and switches into C region by quoting comments.
+
+"*/
+
+/*"
+
+
+"*/ is changed into <<UNIQUETAG and /*" to UNIQUETAG. Some special
+rules apply between "*/ and /*" :
+
+- (n) repeated occurence of \ is mapped to (2n) repeat
+- if some letters are before /*" or after "*/, newline is inserted.
+- if only spaces are before /*", they get truncated.
+
+Commented and uncommented letters in C region get quoted. Commented letters in
+Ruby region become part of the ruby program. Uncommented letters in Ruby
+region are ignored.
