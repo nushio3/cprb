@@ -1,0 +1,32 @@
+/*
+ def arith ()
+ ['+','-','*','/'].each{|op| yield(op)}
+ end
+
+
+  puts"*/
+#include <iostream>
+using namespace std;
+
+class BananaBox {
+  int banana;
+public:
+  void print () {
+    cout << banana << " bananas inside box." << endl;
+  }/*"
+     
+     arith{|op| puts "*/
+  BananaBox operator#{op}= (const BananaBox &x) {
+    banana #{op}= x.banana;
+    return *this;
+  }
+  BananaBox operator#{op} (const BananaBox &x) {
+    return BananaBox(banana #{op} x.banana);
+  }
+  /*" } */
+};
+
+int main () {
+  return 0;
+}
+/*" */
