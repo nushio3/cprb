@@ -1,19 +1,17 @@
 Cprb is a C Preprocessor in Ruby flavor, written in Haskell.
 
 
-philosophy of Cprb:
+
+#### philosophy of Cprb:
 
 1. C preprocessor is poor. This is the origin of suffering.
 2. Then why not use a better language.
 3. minimum implementation cost
 4. use in emacs c++-mode
 
-Bad news for those who loves Haskell: auto-indent ruins the indent within
-comment, so I couldn't use the indent-dependent language. Not to mention
-P*****.
 
 
-rules for Cprb:
+#### rules for Cprb:
 
 Program of Cprb looks like a legal C program. But after some minor editing, it
 is first interpreted and run as a Ruby program. The standard output of the run
@@ -35,3 +33,24 @@ rules apply between "*/ and /*" :
 Commented and uncommented letters in C region get quoted. Commented letters in
 Ruby region become part of the ruby program. Uncommented letters in Ruby
 region are ignored.
+
+
+
+#### how to build:
+
+Cprb needs Haskell and Ruby. An easy way to prepare Haskell environment is to
+install The Haskell Platform:
+
+    http://hackage.haskell.org/platform/
+
+
+You can install Ruby from your package manager, or from Ruby Website:
+
+    http://www.ruby-lang.org/en/
+
+
+Then download and compile Cprb by
+
+    $ git clone https://github.com/nushio3/cprb.git
+    $ cd cprb
+    $ make

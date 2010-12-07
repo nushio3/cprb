@@ -170,6 +170,10 @@ bareRuby::CppParser CprbPart
 bareRuby = fmap (BareRuby . return) notBeginNorEnd
 
 cprbSrc::CppParser CprbSrc
-cprbSrc = many $ foldr1 (<|>) (map hereDocument controls) <|> bareRuby
+cprbSrc = do
+  ret <- many $ foldr1 (<|>) (map hereDocument controls) <|> bareRuby
+  eof
+  return ret
+
 
   
