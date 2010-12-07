@@ -1,0 +1,5 @@
+/* puts "*/
+
+void btoa (char *p);
+
+/*" */

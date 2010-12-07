@@ -1,0 +1,16 @@
+/* puts "*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+extern "C" {
+#include "collabo.h"
+}
+
+int main () {
+  string str = "bbnbnb";
+  btoa(&str[0]);
+  cout << str << endl;
+}
+
+/*" */

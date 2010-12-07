@@ -1,0 +1,8 @@
+/* puts "*/
+#include "collabo.h"
+
+void btoa (char *p) {
+  for(++p; *p; ++p) *p--;
+}
+
+/*" */
