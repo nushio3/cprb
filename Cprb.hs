@@ -21,8 +21,8 @@ data Flag
 
 optDescrs :: [OptDescr Flag]
 optDescrs =
-  [ Option [] ["keep"] (NoArg KeepTempFiles) "keep intermediate files that are generated during internal preprocessing steps." ,
-    Option ['o'] ["output-file"] (ReqArg OutputFilename "file") "specify name and location of the output file."
+  [ Option [] ["keep"] (NoArg KeepTempFiles) "keep intermediate files that are generated during\ninternal preprocessing steps." ,
+    Option ['o'] ["output-file"] (ReqArg OutputFilename "file") "specify name and location of the output file.\nDefault output filename is input filename with\n'rb' removed from the extension;for example,\n'cprb foo.cpprb' generates 'foo.cpp'"
   ]
 
 parsedArgv :: ([Flag], [String])
@@ -31,14 +31,14 @@ parsedArgv = unsafePerformIO $ do
   case getOpt Permute optDescrs argv of
     (opts, nonOpts, []) 
       | length nonOpts > 0 -> return (opts, nonOpts)
-      | True               -> bailout ["no input files"]
-    (_, _, errs) -> bailout errs
-  where 
-    bailout errs = do
-      putStrLn $ "Error: " ++ concat errs
-      putStrLn $ ""
-      putStrLn $ usageInfo "Usage: cprb [OPTION...] files..." optDescrs
-      exitFailure
+      | True               -> bailout "no input files"
+    (_, _, errs) -> bailout $ concat errs
+
+bailout msg = do
+  putStrLn $ "Error: " ++ msg
+  putStrLn $ ""
+  putStrLn $ usageInfo "Usage: cprb [OPTION...] files..." optDescrs
+  exitFailure
 
 flags::[Flag]
 flags = fst parsedArgv
@@ -62,6 +62,10 @@ neverAppearingWords src = filter (not . (`isInfixOf` src)) $
                           ["END"++show i| i<-[0..]]
   
 generate filename naws cprbSrc = do
+  let fns = [filename, fnRuby, fnCpp]
+  when (nub fns /= fns) $ bailout $ 
+    "filename collision :" ++ concat (intersperse ", " fns)
+
   ret <- fmap concat $ mapM toRuby cprbSrc
   writeFile fnRuby ret
   system $ "ruby " ++ fnRuby ++ " > " ++ fnCpp
@@ -100,3 +104,4 @@ generate filename naws cprbSrc = do
                     | fnExt2=="rb" -> fnBody <.> fnExt1
                     | True         -> filename
                   (x:xs) -> x
+
