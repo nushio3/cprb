@@ -101,7 +101,7 @@ quotedString = do
 cppSrc::Parser CppSrc
 cppSrc = do
   cpp <- many (quotedString <|> comment <|>oneLineComment <|> cppChar) 
-  return $ detectControl.map reduce.g $ cpp
+  return $ assume.detectControl.map reduce.g $ cpp
     where
       reduce::[CppPart] -> CppPart
       reduce parts = case head parts of
@@ -133,7 +133,29 @@ cppSrc = do
                 _ -> [x]
         )
                       
-      
+      assume::CppSrc -> CppSrc
+      assume parts 
+        | length parts ==0 = parts
+        | otherwise = let
+             controls = flip filter parts 
+               (\x->case x of
+                 Begin _ _ -> True
+                 End _ _   -> True
+                 _ -> False)
+             (needB,needE)
+               | length controls ==0 = (True, True)
+               | otherwise = 
+                 ((case head controls of
+                      Begin _ _ -> False
+                      _ -> True),
+                  (case last controls of
+                      End _ _ -> False
+                      _ -> True))
+             p1 = headPosition (head parts)
+             p2 = lastPosition (last parts)
+             bs = if needB then [Comment "puts " p1 p1, Begin Quoting p1] else []
+             es = if needE then [End Quoting p2] else []
+        in bs ++ parts ++ es
               
 type CppParser = GenParser CppPart ()                      
 cppToken = token showCppPart headPosition 

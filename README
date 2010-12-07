@@ -32,6 +32,10 @@ Commented and uncommented letters in C region get quoted. Commented letters in
 Ruby region become part of the ruby program. Uncommented letters in Ruby
 region are ignored.
 
+If the first/last quoting comment is not an opening/closing one, a
+opening/closing quoting comment is assumet at the beginning/end of the
+file.
+
 
 #### how to build:
 
