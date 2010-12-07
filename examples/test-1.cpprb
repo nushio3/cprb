@@ -21,7 +21,7 @@ int operator+(int x, #{dir} d) {
 
   puts "*/
 int main () {
-  /* calculate address at (4,2) */
+  /* calculate address at (2,4,0) */
   cout << 0#{' +Y()'*4}#{' +X()'*2} << endl;
   return 0;
 } 
