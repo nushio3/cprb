@@ -100,7 +100,7 @@ generate filename naws cprbSrc = do
           trim1 list@(x:xs)
             | all isSpace x = xs
             | otherwise = list 
-          in concat.intersperse "\n".trim1.lines
+          in concat.intersperse "\n".reverse.trim1.reverse.trim1.lines
 
         (fnBody, fnExt) = splitExtension filename
         (fnExt1, fnExt2) = splitAt (length fnExt - 2) fnExt
