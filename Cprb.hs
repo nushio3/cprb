@@ -5,6 +5,7 @@ import Data.Char
 import Data.IORef
 import Data.List
 import System.Console.GetOpt
+import System.Directory
 import System.Environment
 import System.Exit
 import System.FilePath
@@ -73,7 +74,9 @@ generate filename naws cprbSrc = do
   ret <- fmap concat $ mapM toRuby cprbSrc
   writeFile fnRuby ret
   code <- system $ "ruby " ++ fnRuby ++ " > " ++ fnCpp
-  when (isFailure code && not (IgnoreRubyError `elem` flags)) $ exitWith code 
+  when (isFailure code && not (IgnoreRubyError `elem` flags)) $ do 
+    removeFile fnCpp
+    exitWith code 
 
   where
     toRuby::CprbPart -> IO String
