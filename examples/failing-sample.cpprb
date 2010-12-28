@@ -1,0 +1,7 @@
+#include <iostream>
+using namespace std;
+/*" puts"*/
+
+int main () {
+  cout << "Hello World, I was born at #{Time.now} !\n";
+}
