@@ -19,12 +19,14 @@ import Parser
 data Flag 
   = OutputFilename String
   | KeepTempFiles 
+  | IgnoreRubyError
     deriving (Eq, Ord, Read, Show)
 
 optDescrs :: [OptDescr Flag]
 optDescrs =
   [ Option [] ["keep"] (NoArg KeepTempFiles) "keep intermediate files that are generated during\ninternal preprocessing steps." ,
-    Option ['o'] ["output-file"] (ReqArg OutputFilename "file") "specify name and location of the output file.\nDefault output filename is input filename with\n'rb' removed from the extension;for example,\n'cprb foo.cpprb' generates 'foo.cpp'"
+    Option ['o'] ["output-file"] (ReqArg OutputFilename "file") "specify name and location of the output file.\nDefault output filename is input filename with\n'rb' removed from the extension;for example,\n'cprb foo.cpprb' generates 'foo.cpp'",
+    Option [] ["ignore"] (NoArg IgnoreRubyError) "do not abort when ruby script exits with error." 
   ]
 
 parsedArgv :: ([Flag], [String])
@@ -70,51 +72,56 @@ generate filename naws cprbSrc = do
     "filename collision :" ++ concat (intersperse ", " fns)
   ret <- fmap concat $ mapM toRuby cprbSrc
   writeFile fnRuby ret
-  system $ "ruby " ++ fnRuby ++ " > " ++ fnCpp
-      where
-        toRuby::CprbPart -> IO String
-        toRuby (BareRuby cppSrc) = fmap concat $ mapM cpp2br cppSrc 
-        toRuby (HereDocument c cppSrc) = case c of
-          Quoting -> makeHereDocument $ concat $ map reconstruct cppSrc
-  
-        cpp2br (OneLineComment s _ _) = return $ s ++ "\n"
-        cpp2br (Comment s _ _) = return $ s
-        cpp2br _ = return $ ""
-  
-        reconstruct (Src s _ _) = s
-        reconstruct (OneLineComment s _ _) = "//" ++ s ++ "\n"
-        reconstruct (Comment s _ _) = "/*" ++ s ++ "*/"
-        reconstruct _ = ""
-        
-        makeHereDocument src = do
-          (naw:xs) <- readIORef naws
-          writeIORef naws xs
-          let srclines = lines src
-          return $ "<<" ++ naw ++ "\n"
-                    ++ (escape . trim) src
-                    ++ "\n" ++ naw ++ "\n"
-        
-        escape = concat . map (\c -> if c == '\\' then "\\\\" else [c])
-        trim = let 
-          trim1 [] = []
-          trim1 list@(x:xs)
-            | all isSpace x = xs
-            | otherwise = list 
-          in concat.intersperse "\n".reverse.trim1.reverse.trim1.lines
+  code <- system $ "ruby " ++ fnRuby ++ " > " ++ fnCpp
+  when (isFailure code && not (IgnoreRubyError `elem` flags)) $ exitWith code 
 
-        (fnBody, fnExt) = splitExtension filename
-        (fnExt1, fnExt2) = splitAt (length fnExt - 2) fnExt
+  where
+    toRuby::CprbPart -> IO String
+    toRuby (BareRuby cppSrc) = fmap concat $ mapM cpp2br cppSrc 
+    toRuby (HereDocument c cppSrc) = case c of
+      Quoting -> makeHereDocument $ concat $ map reconstruct cppSrc
+  
+    cpp2br (OneLineComment s _ _) = return $ s ++ "\n"
+    cpp2br (Comment s _ _) = return $ s
+    cpp2br _ = return $ ""
+  
+    reconstruct (Src s _ _) = s
+    reconstruct (OneLineComment s _ _) = "//" ++ s ++ "\n"
+    reconstruct (Comment s _ _) = "/*" ++ s ++ "*/"
+    reconstruct _ = ""
+    
+    makeHereDocument src = do
+      (naw:xs) <- readIORef naws
+      writeIORef naws xs
+      let srclines = lines src
+      return $ "<<" ++ naw ++ "\n"
+                ++ (escape . trim) src
+                ++ "\n" ++ naw ++ "\n"
+    
+    escape = concat . map (\c -> if c == '\\' then "\\\\" else [c])
+    trim = let 
+      trim1 [] = []
+      trim1 list@(x:xs)
+        | all isSpace x = xs
+        | otherwise = list 
+      in concat.intersperse "\n".reverse.trim1.reverse.trim1.lines
 
-        fnRuby = if KeepTempFiles `elem` flags
-                 then fnBody <.> "rb"
-                 else "/tmp/cprb.rb"
-        ofnCandidate = concat $ flip map flags $
-                       \opt -> case opt of
-                                 OutputFilename fn -> [fn]
-                                 _ -> []
-        fnCpp = case ofnCandidate of
+    (fnBody, fnExt) = splitExtension filename
+    (fnExt1, fnExt2) = splitAt (length fnExt - 2) fnExt
+
+    fnRuby = if KeepTempFiles `elem` flags
+             then fnBody <.> "rb"
+             else "/tmp/cprb.rb"
+    ofnCandidate = concat $ flip map flags $
+                   \opt -> case opt of
+                             OutputFilename fn -> [fn]
+                             _ -> []
+    fnCpp = case ofnCandidate of
                   [] 
                     | fnExt2=="rb" -> fnBody <.> fnExt1
                     | True         -> filename
                   (x:xs) -> x
-
+                  
+    isFailure code = case code of
+                       ExitFailure _ -> True
+                       _ -> False
